@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Password;
+use App\Http\Controllers\Game\GameController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
@@ -51,3 +52,9 @@ Route::get('/reset-password/{token}', [UserController::class, 'resetPassword'])
 Route::post('/reset-password', [UserController::class, 'updatePassword'])
   ->middleware('guest')
   ->name('password-update');
+
+//My Games
+Route::get('/my-games', [UserController::class, 'myGames'])->name('my-games');
+//Upload Game
+Route::get('/upload-game', [GameController::class, 'uploadGameForm'])->name('upload-game');
+Route::post('/upload-game', [GameController::class, 'uploadGame']);

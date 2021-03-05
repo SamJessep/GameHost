@@ -6,7 +6,7 @@
   @auth
     <li><a class="link text-lg" href="{{route('user',Auth::user()->username)}}">{{Auth::user()->name}}</a></li>
     @if(Auth::user()->isDev)
-      <li><a class="link text-lg" href="#MYGAMES">My Games</a></li>
+      <li><a class="link text-lg" href="{{route('my-games')}}">My Games</a></li>
     @endif
     <form action="{{route('logout')}}" method="post" class="inline">
       @csrf

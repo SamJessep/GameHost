@@ -123,4 +123,8 @@ class UserController extends Controller
                     ? redirect()->route('login')->with('status', __($status))
                     : back()->withErrors(['email' => [__($status)]]);
     }
+
+    public function myGames(){
+        return view('web.game.my-games');
+    }
 }
