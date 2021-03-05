@@ -1,0 +1,1 @@
+<img class="rounded-full h-24 w-24 mx-auto" src="{{$user->picture}}" alt=""/> 
