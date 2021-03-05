@@ -24,6 +24,6 @@
     </label>
     Dont have an account <a href="{{route('register')}}" class="link mb-3">Click here</a> to sign up
     <input type="submit" value="Login" class="btn-good">
-    <a href="/RestPassword" class="btn-bad">Forgot my password</a>
+    <a href="{{route('forgot-password')}}" class="btn-bad block">Forgot my password</a>
   </form>
 @endsection
