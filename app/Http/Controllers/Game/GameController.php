@@ -56,4 +56,16 @@ class GameController extends Controller
         $url = Storage::url('public/tmpGames/'.$location.'/'.$filename."-".$current_time.".".$extension);
         return $url;
     }
+
+    private function ValidateZipFile($location, $zipName){
+        $zip = new ZipArchive;
+        $res = $zip->open($location.$zipName);
+        if ($res === TRUE) {
+            $zip->extractTo($location.'/extracted/');
+            $zip->close();
+        } else {
+            echo 'doh!';
+        }
+        return file_exists($location.'/extracted/index.html');
+    }
 }
