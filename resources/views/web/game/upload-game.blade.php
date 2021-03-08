@@ -5,28 +5,44 @@
 @endsection
 
 @section('form')
-<form action="{{route('upload-game')}}" method="POST">
+<form action="{{route('upload-game')}}" method="POST" enctype="multipart/form-data">
+  @csrf
   <label>Name
     <input name="name" type="text" class="form-field" placeholder="Game name">
   </label>
+  @error('name')
+    <div class="text-red-500">{{$message}}</div>
+  @enderror
   <label>Description
     <textarea name="description" type="text" class="form-field" placeholder="Description"></textarea>
   </label>
+  @error('description')
+    <div class="text-red-500">{{$message}}</div>
+  @enderror
   <label>Game Files Zip
     <small class="block text-gray-500">an index.html file must be in the root</small>
-    <input id="gameFilesInput" name="gameZip" type="file" class="form-field">
+    <input id="gameFilesInput" name="gameZip" type="file" class="form-field" accept=".zip">
   </label>
+  @error('gameZip')
+    <div class="text-red-500">{{$message}}</div>
+  @enderror
   <label>Preview Image/Thumbnail
     <small class="block text-gray-500">This image will be shown in lists of games and used as the thumbnail for the game</small>
     <input id="thumbnailInput" name="previewImage" type="file" accept="image/*" class="form-field">
   </label>
+  @error('previewImage')
+    <div class="text-red-500">{{$message}}</div>
+  @enderror
   <div class="border-b-4 hover:border-green-500 cursor-pointer hidden">
     <img class="w-full p-3" src="" id="thumbnailPreview">
   </div>
   <label>Gallary Images
     <small class="block text-gray-500">These images will be shown on the details page for this game to give an overview of your game</small>
-    <input id="gallaryInput" name="gallaryImages" type="file" accept="image/*" multiple class="form-field">
+    <input id="gallaryInput" name="gallaryImages[]" type="file" accept="image/*" multiple class="form-field">
   </label>
+  @error('gallaryImages')
+    <div class="text-red-500">{{$message}}</div>
+  @enderror
   <div id="gallaryPreviewContainer" class="flex flex-wrap">
 
   </div>

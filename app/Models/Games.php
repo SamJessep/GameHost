@@ -12,6 +12,9 @@ class Games extends Model
     protected $fillable = [
         'name',
         'author',
-        'description'
+        'description',
+        'gameZip',
+        'thumbnailImage',
+        'gallaryImages'
     ];
 }

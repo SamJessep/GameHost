@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 use App\Models\User;
+use App\Models\Games;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -43,6 +44,7 @@ class UserController extends Controller
             'about'=>$request->about ?? '',
             'isDev'=>$request->isDev ? true : false
         ]);
+        $this->storePicture($request);
         $user->save();
         return redirect()->route('user', ['username'=>$user->username]);
     }
@@ -58,18 +60,16 @@ class UserController extends Controller
                     'image' => 'mimes:jpeg,png|max:625000',
                 ]);
                 $extension = $request->image->extension();
-                $request->image->storeAs('/public', $user->id."-".$current_time.".".$extension);
-                $url = Storage::url($user->id."-".$current_time.".".$extension);
+                $request->image->storeAs('public/', $user->id."-".$current_time.".".$extension);
+                $url = Storage::url('public/'.$user->id."-".$current_time.".".$extension);
                 //Delete old profile picture
                 if(File::exists($user->picture)) {
                     File::delete($user->picture);
                 }
                 $user->picture = $url;
-                $user->save();
-                return Redirect::back();
             }
         }
-        return Redirect::back();
+        return $request;
         //abort(500, 'Could not upload image :(');
     }
 
@@ -77,7 +77,7 @@ class UserController extends Controller
         $user = Auth::user();
         $user->picture = 'images/noProfile.png';
         $user->save();
-        return redirect()->route('edit-user');
+        return redirect()->route('edit-user', ['username'=>$user->username]);
     }
 
     public function storeResetEmail(Request $request) {
@@ -125,6 +125,10 @@ class UserController extends Controller
     }
 
     public function myGames(){
-        return view('web.game.my-games');
+        $user = Auth::user();
+        $myGames = Games::where('author', $user->username)->get();
+
+        //dd($myGames);
+        return view('web.game.my-games', ['myGames'=>$myGames]);
     }
 }

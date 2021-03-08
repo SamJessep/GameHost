@@ -34,6 +34,7 @@ Route::post('/Logout', [LogoutController::class, 'store'])->name('logout');
 Route::get('/User/{username}', [UserController::class, 'index'])->name('user');
 Route::get('/User/{username}/Edit', [UserController::class, 'edit'])->name('edit-user');
 Route::post('/User/{username}/UploadPicture', [UserController::class, 'storePicture'])->name('upload-picture');
+Route::post('/User/{username}/RemovePicture', [UserController::class, 'RemoveProfile'])->name('remove-picture');
 Route::post('/User/{username}/Save', [UserController::class, 'saveEdits'])->name('save-edits');
 
 //Reset password
