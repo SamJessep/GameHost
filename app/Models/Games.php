@@ -13,7 +13,7 @@ class Games extends Model
         'name',
         'author',
         'description',
-        'gameZip',
+        'gameUrl',
         'thumbnailImage',
         'gallaryImages'
     ];

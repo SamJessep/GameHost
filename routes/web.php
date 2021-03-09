@@ -59,3 +59,7 @@ Route::get('/my-games', [UserController::class, 'myGames'])->name('my-games');
 //Upload Game
 Route::get('/upload-game', [GameController::class, 'uploadGameForm'])->name('upload-game');
 Route::post('/upload-game', [GameController::class, 'uploadGame']);
+
+
+//Game player
+Route::get('/game/{gameName}', [GameController::class, 'loadGame'])->name('load-game');

@@ -19,7 +19,7 @@ class CreateGamesTable extends Migration
             $table->string('name');
             $table->string('author');
             $table->string('description');
-            $table->string('gameZip');
+            $table->string('gameUrl');
             $table->string('thumbnailImage');
             $table->string('gallaryImages');
 

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Game;
 
+use ZipArchive;
 use App\Models\Games;
+use App\Rules\validGameZip;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -10,7 +12,13 @@ use Illuminate\Support\Facades\Storage;
 
 class GameController extends Controller
 {
+    public function loadGame($gameName){
+        $game = Games::where('name', $gameName)->first();
+        return view('web.game.player',['game'=>$game]);
+    }
+
     public function uploadGameForm(){
+        //$this->UnZipFile('storage/tmpGames/5thGame/gameZip-1615249421.zip', 'storage/tmpGames/5thGame/');
         return view('web.game.upload-game');
     }
 
@@ -23,17 +31,24 @@ class GameController extends Controller
             'previewImage' => 'required|image|max:5000',
             'gallaryImages' => 'max:50000'
         ]);
-        $user = Auth::user();
+
+        $request->validate([
+            'gameZip' => ['required', new validGameZip],
+        ]);
+
+        //Upload zip file, unzip file, get url of unziped game
+        $gameUrl = $this->StoreFile($request->gameZip, $request->name);
+        $gameUrl = $this->UnZipFile($gameUrl, dirname($gameUrl));
+
+        //Upload Preview Image and gallary images
         if($request->previewImage){
-            $previewImageUrl = $this->StoreFile($request->previewImage, $request->name,'previewImage', $user);
+            $previewImageUrl = $this->StoreFile($request->previewImage, $request->name);
         }
-        if($request->gameZip){
-            $gameUrl = $this->StoreFile($request->gameZip, $request->name,'gameZip', $user);
-        }
+
         if($request->gallaryImages){
             $gallaryImages = [];
             foreach ($request->gallaryImages as $index=>$gallaryImage){
-                array_push($gallaryImages, $this->StoreFile($gallaryImage, $request->name, 'gallary'.$index, $user));
+                array_push($gallaryImages, $this->StoreFile($gallaryImage, $request->name));
             }
         }
 
@@ -41,31 +56,30 @@ class GameController extends Controller
             'name' => $request->name,
             'author' => $user->username,
             'description' => $request->description,
-            'gameZip' => $gameUrl,
+            'gameUrl' => $gameUrl,
             'thumbnailImage' => $previewImageUrl,
             'gallaryImages' => implode('; ',$gallaryImages)
         ]);
         return redirect()->route('my-games');
     }
 
-    private function StoreFile($image, $location, $filename, $user){
-        $location = implode('',explode(' ', $location));
-        $current_time = \Carbon\Carbon::now()->timestamp;
-        $extension = $image->extension();
-        $image->storeAs('public/tmpGames/'.$location.'/', $filename."-".$current_time.".".$extension);
-        $url = Storage::url('public/tmpGames/'.$location.'/'.$filename."-".$current_time.".".$extension);
+    private function StoreFile($file, $location){
+        $folderName = implode('',explode(' ', $location));
+        $url = $file->store('public/tmpGames/'.$folderName);
+        return str_replace('public', 'storage',$url);
         return $url;
     }
 
-    private function ValidateZipFile($location, $zipName){
+    private function UnZipFile($zipPath, $savePath){
+        while(!file_exists($zipPath));
         $zip = new ZipArchive;
-        $res = $zip->open($location.$zipName);
+        $res = $zip->open($zipPath);
         if ($res === TRUE) {
-            $zip->extractTo($location.'/extracted/');
+            $zip->extractTo($savePath);
             $zip->close();
         } else {
             echo 'doh!';
         }
-        return file_exists($location.'/extracted/index.html');
+        return $savePath;
     }
 }
