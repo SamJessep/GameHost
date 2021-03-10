@@ -55,10 +55,10 @@ Route::post('/reset-password', [UserController::class, 'updatePassword'])
   ->name('password-update');
 
 //My Games
-Route::get('/my-games', [UserController::class, 'myGames'])->name('my-games');
+Route::get('/my-games', [UserController::class, 'myGames'])->middleware('auth')->name('my-games');
 //Upload Game
-Route::get('/upload-game', [GameController::class, 'uploadGameForm'])->name('upload-game');
-Route::post('/upload-game', [GameController::class, 'uploadGame']);
+Route::get('/upload-game', [GameController::class, 'uploadGameForm'])->middleware('auth')->name('upload-game');
+Route::post('/upload-game', [GameController::class, 'uploadGame'])->middleware('auth');
 
 
 //Game player

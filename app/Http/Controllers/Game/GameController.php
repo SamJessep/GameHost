@@ -6,9 +6,13 @@ use ZipArchive;
 use App\Models\Games;
 use App\Rules\validGameZip;
 use Illuminate\Http\Request;
+use App\Jobs\ProcessGameUpload;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\Data\CloudController;
+use App\Http\Controllers\Data\LocalController;
 
 class GameController extends Controller
 {
@@ -36,50 +40,30 @@ class GameController extends Controller
             'gameZip' => ['required', new validGameZip],
         ]);
 
-        //Upload zip file, unzip file, get url of unziped game
-        $gameUrl = $this->StoreFile($request->gameZip, $request->name);
-        $gameUrl = $this->UnZipFile($gameUrl, dirname($gameUrl));
-
+        $zipUrl = LocalController::StoreFile($request->gameZip, 'tmpGames\\'.$request->name);
         //Upload Preview Image and gallary images
         if($request->previewImage){
-            $previewImageUrl = $this->StoreFile($request->previewImage, $request->name);
+            $previewImageUrl = basename(LocalController::StoreFile($request->previewImage, 'tmpGames\\'.$request->name));
         }
 
         if($request->gallaryImages){
-            $gallaryImages = [];
+            $gallaryImagesUrls = [];
             foreach ($request->gallaryImages as $index=>$gallaryImage){
-                array_push($gallaryImages, $this->StoreFile($gallaryImage, $request->name));
+                array_push($gallaryImagesUrls, basename(LocalController::StoreFile($gallaryImage, 'tmpGames\\'.$request->name)));
             }
         }
-
-        Games::Create([
+        
+        $game = Games::Create([
             'name' => $request->name,
             'author' => $user->username,
             'description' => $request->description,
-            'gameUrl' => $gameUrl,
             'thumbnailImage' => $previewImageUrl,
-            'gallaryImages' => implode('; ',$gallaryImages)
+            'gallaryImages' => implode('; ',$gallaryImagesUrls),
+            'uploadStatus' => 'ready for upload'
         ]);
+        ProcessGameUpload::dispatch($zipUrl, $game);
         return redirect()->route('my-games');
     }
 
-    private function StoreFile($file, $location){
-        $folderName = implode('',explode(' ', $location));
-        $url = $file->store('public/tmpGames/'.$folderName);
-        return str_replace('public', 'storage',$url);
-        return $url;
-    }
 
-    private function UnZipFile($zipPath, $savePath){
-        while(!file_exists($zipPath));
-        $zip = new ZipArchive;
-        $res = $zip->open($zipPath);
-        if ($res === TRUE) {
-            $zip->extractTo($savePath);
-            $zip->close();
-        } else {
-            echo 'doh!';
-        }
-        return $savePath;
-    }
 }
