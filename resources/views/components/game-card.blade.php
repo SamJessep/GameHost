@@ -3,4 +3,5 @@
         <h2>{{$title}}</h2>
         <img src={{$thumbnailImg}} alt={{$title.'\'s thumbnail image'}}>
     </a>
+    <a href="{{route('edit-game', ["gameName"=>$title])}}">Edit Game</a>
 </div>

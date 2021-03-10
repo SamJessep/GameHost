@@ -8,7 +8,7 @@
   <a class="link" href="{{route('upload-game')}}">Upload Game</a>
 
   @foreach ($myGames as $game)
-    <x-game-card title="{{$game->name}}" thumbnailImg="{{env('GAME_STORE_URL').$game->gameUrl.'/'.$game->thumbnailImage}}"/>
+    <x-game-card title="{{$game->name}}" thumbnailImg="{{env('GAME_STORE_URL').$game->thumbnailImage}}"/>
   @endforeach
 {{-- 
   @foreach ($myGames as $game)

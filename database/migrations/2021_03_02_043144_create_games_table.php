@@ -18,11 +18,11 @@ class CreateGamesTable extends Migration
             $table->timestamps();
             $table->string('name');
             $table->string('author');
-            $table->string('description');
+            $table->longText('description');
             $table->string('gameUrl')->nullable();
             $table->string('thumbnailImage');
-            $table->string('gallaryImages');
-            $table->string('uploadStatus');
+            $table->longText('gallaryImages');
+            $table->string('status');
 
             $table->foreign('author')->references('username')->on('users');
         });

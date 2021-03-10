@@ -59,7 +59,11 @@ Route::get('/my-games', [UserController::class, 'myGames'])->middleware('auth')-
 //Upload Game
 Route::get('/upload-game', [GameController::class, 'uploadGameForm'])->middleware('auth')->name('upload-game');
 Route::post('/upload-game', [GameController::class, 'uploadGame'])->middleware('auth');
-
+//Edit Game
+Route::get('/game/{gameName}/edit', [GameController::class, 'editGame'])->middleware('auth')->name('edit-game');
+Route::post('/game/{gameName}/edit', [GameController::class, 'updateGame'])->middleware('auth')->name('update-game');
+//Game Submitted
+Route::get('/upload-game/submit-success', [GameController::class, 'submitSuccess'])->middleware('auth')->name('submit-success');
 
 //Game player
 Route::get('/game/{gameName}', [GameController::class, 'loadGame'])->name('load-game');

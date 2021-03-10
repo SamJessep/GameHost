@@ -16,6 +16,6 @@ class Games extends Model
         'gameUrl',
         'thumbnailImage',
         'gallaryImages',
-        'uploadStatus'
+        'status'
     ];
 }

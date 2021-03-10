@@ -29,4 +29,13 @@ class LocalController extends Controller
         }
         return $savePath;
     }
+
+    public static function Delete($filePath){
+        $contents = Storage::get($filePath);
+        if($contents['type'] == 'dir'){
+            Storage::deleteDirectory($filePath);
+        }else{
+            Storage::delete($filePath);
+        }
+    }
 }
