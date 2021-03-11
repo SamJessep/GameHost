@@ -31,7 +31,7 @@ class GameController extends Controller
     public function uploadGame(Request $request){
         $user = Auth::user();
         $this->validate($request, [
-            'name' => 'required|max:255',
+            'name' => 'required|max:255|unique:App\Models\Games,name',
             'description' => 'max:1000',
             'gameZip' => 'file|max:50000',
             'previewImage' => 'required|image|max:5000',
@@ -116,6 +116,11 @@ class GameController extends Controller
         }
 
         return view('web.game.edit-game', ["game"=>$game]);
+    }
+
+    public function DeleteGame($gameName){
+        Games::where('name', $gameName)->first()->delete();
+        return redirect()->route('my-games');
     }
 
 

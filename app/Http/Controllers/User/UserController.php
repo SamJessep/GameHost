@@ -34,7 +34,7 @@ class UserController extends Controller
         $user = Auth::user();
         $this->validate($request, [
             'name' => 'required|max:255',
-            'username' => 'required|max:255',
+            'username' => 'required|max:255|unique:App\Models\User,username,'.$user->username,
             'about' => 'max:500'
         ]);
 

@@ -18,4 +18,8 @@ class Games extends Model
         'gallaryImages',
         'status'
     ];
+
+    public function authorUser(){
+        return User::where('username', $this->author)->first();
+    }
 }

@@ -1,0 +1,1 @@
+<a class="link" href="{{url()->previous()}}">Back</a>

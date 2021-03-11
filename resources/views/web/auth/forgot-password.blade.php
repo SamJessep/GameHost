@@ -7,12 +7,7 @@
 @section('form')
 <form action="{{route('store-reset-email')}}" method="POST">
   @csrf
-  <label>Email
-    <input name="email" type="email" value="{{old('email')}}" placeholder="example@email.com" class="form-field @error('email') border-red-500 @enderror"/>
-  </label>
-  @error('email')
-    <div class="text-red-500">{{$message}}</div>
-  @enderror
+  <x-form-input label="Email" name="email" type="email" placeholder="example@email.com"/>
   <input type="submit" value="Send Reset Email" class="btn-good">
 </form>
 @endsection

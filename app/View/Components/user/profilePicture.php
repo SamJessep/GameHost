@@ -1,19 +1,22 @@
 <?php
 
-namespace App\View\Components;
+namespace App\View\Components\user;
 
 use Illuminate\View\Component;
 
-class gameCard extends Component
+class profilePicture extends Component
 {
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct()
+    public $user;
+    public $size;
+    public function __construct($user, $size='24')
     {
-        //
+        $this->user=$user;
+        $this->size=$size;
     }
 
     /**
@@ -23,6 +26,6 @@ class gameCard extends Component
      */
     public function render()
     {
-        return view('components.game-card');
+        return view('components.user.profile-picture');
     }
 }

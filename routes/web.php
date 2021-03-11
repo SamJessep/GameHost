@@ -62,6 +62,8 @@ Route::post('/upload-game', [GameController::class, 'uploadGame'])->middleware('
 //Edit Game
 Route::get('/game/{gameName}/edit', [GameController::class, 'editGame'])->middleware('auth')->name('edit-game');
 Route::post('/game/{gameName}/edit', [GameController::class, 'updateGame'])->middleware('auth')->name('update-game');
+//Delete Game
+Route::post('/game/{gameName}/delete', [GameController::class, 'deleteGame'])->middleware('auth')->name('delete-game');
 //Game Submitted
 Route::get('/upload-game/submit-success', [GameController::class, 'submitSuccess'])->middleware('auth')->name('submit-success');
 

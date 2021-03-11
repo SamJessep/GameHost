@@ -7,18 +7,8 @@
 @section('form')
   <form action="" method="post">
     @csrf
-    <label>Username
-      <input name="username" type="text" class="form-field @error('username') border-red-500 @enderror"/>
-    </label>
-    @error('username')
-        <div class="text-red-500">{{$message}}</div>
-    @enderror
-    <label>Password
-      <input name="password" type="password" class="form-field @error('password') border-red-500 @enderror"/>
-    </label>
-    @error('password')
-        <div class="text-red-500">{{$message}}</div>
-      @enderror
+    <x-form-input label="Username" name="username" type="text"/>
+    <x-form-input label="Password" name="password" type="password"/>
     <label class="block">
       Remember Me <input type="checkbox" name="rememberMe" class="mb-3"/>
     </label>

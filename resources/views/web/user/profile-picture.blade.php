@@ -1,1 +1,0 @@
-<img id="profile-picture" class="rounded-full h-{{$size ?? '24'}} w-{{$size ?? '24'}} mx-auto" src="{{asset($user->picture)}}" alt=""/> 

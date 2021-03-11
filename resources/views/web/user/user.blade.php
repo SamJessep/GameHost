@@ -5,7 +5,8 @@
 @endsection
 
 @section('form')
-@include('web.user.profile-picture')
+
+<x-user.profile-picture :user="$user" class="mx-auto" :size="24"/>
 <h1 class="text-center text-2xl">{{$user->name}}</h1>
 <small class="text-center text-gray-700 block">{{$user->username}}</small>
 @auth
