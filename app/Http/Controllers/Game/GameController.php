@@ -24,7 +24,6 @@ class GameController extends Controller
     }
 
     public function uploadGameForm(){
-        //$this->UnZipFile('storage/tmpGames/5thGame/gameZip-1615249421.zip', 'storage/tmpGames/5thGame/');
         return view('web.game.upload-game');
     }
 
