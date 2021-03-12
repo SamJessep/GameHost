@@ -27,15 +27,38 @@ class CloudController extends Controller
                 CloudController::UploadContent($subDir, $cloudDir['path'].'/'.basename($subDir), $cloudDir['path']);
             }
             foreach($subFiles as $subFile){
-                Storage::cloud()->put($cloudDir['path'].'/'.basename($subFile), Storage::get($subFile));
+                CloudController::SaveFileWithMime($cloudDir['path'], Storage::path($subFile));
             }
         }
     }
 
+    public static function SaveFileWithMime($cloudUrl, $localUrl){
+        $mimes = new \Mimey\MimeTypes;
+        // Return MIME type ala mimetype extension
+        $finfo = finfo_open(FILEINFO_MIME_TYPE); 
+        // Get the MIME type of the file
+        $file_mime = finfo_file($finfo, $localUrl);
+
+        // Convert extension to MIME type:
+        $file_mime = $mimes->getMimeType(pathinfo($localUrl, PATHINFO_EXTENSION));
+        finfo_close($finfo);
+        $file_handle = fopen($localUrl, 'r');
+        Storage::cloud()
+            ->getDriver()
+            ->put( 
+                $cloudUrl.'/'.basename($localUrl),
+                $file_handle,
+                [
+                    'visibility' => 'public',
+                    'mimetype' => $file_mime
+                ]
+            );
+        return $cloudUrl.'/'.basename($localUrl);
+    }
+
     public static function UploadFile($localPath, $cloudPath){
         $idPath = CloudController::Path($cloudPath);
-        $localFile = Storage::get($localPath);
-        Storage::cloud()->put($idPath.'/'.basename($localPath),$localFile);
+        CloudController::SaveFileWithMime($idPath, Storage::path($localPath));
         return $cloudPath.'/'.basename($localPath);
     }
 

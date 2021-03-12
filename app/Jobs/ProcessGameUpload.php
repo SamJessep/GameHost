@@ -13,7 +13,7 @@ use Illuminate\Contracts\Queue\ShouldBeUnique;
 
 class ProcessGameUpload implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
      * Create a new job instance.

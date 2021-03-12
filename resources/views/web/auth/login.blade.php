@@ -7,8 +7,8 @@
 @section('form')
   <form action="" method="post">
     @csrf
-    <x-form-input label="Username" name="username" type="text"/>
-    <x-form-input label="Password" name="password" type="password"/>
+    <x-form.input label="Username" name="username" type="text"/>
+    <x-form.input label="Password" name="password" type="password"/>
     <label class="block">
       Remember Me <input type="checkbox" name="rememberMe" class="mb-3"/>
     </label>

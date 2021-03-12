@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Password;
 use App\Http\Controllers\Game\GameController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Data\CloudController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
 
@@ -69,3 +70,9 @@ Route::get('/upload-game/submit-success', [GameController::class, 'submitSuccess
 
 //Game player
 Route::get('/game/{gameName}', [GameController::class, 'loadGame'])->name('load-game');
+
+
+
+
+
+//Route::get('/test', [CloudController::class, 'test']);
