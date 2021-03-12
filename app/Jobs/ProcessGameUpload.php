@@ -2,8 +2,10 @@
 
 namespace App\Jobs;
 
+use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -36,13 +38,21 @@ class ProcessGameUpload implements ShouldQueue
     public function handle()
     {
         //Upload zip file, unzip file, get url of unziped game
+        $oldGameUrl = $this->game->gameUrl;
         $extractedFolderUrl = LocalController::UnZipFile($this->zipUrl, dirname($this->zipUrl));
         $gameUrl = CloudController::UploadDirectory($extractedFolderUrl);
+        if(isset($oldGameUrl)){
+            if(dirname($oldGameUrl) == env('LOCAL_IMAGES_DIR')){
+                LocalController::Delete($oldGameUrl);
+            }else{
+                CloudController::Delete($oldGameUrl,true,false);
+            }
+        }
         $this->game->fill([
             'gameUrl'=>$gameUrl,
             'uploadStatus'=>'uploaded'
         ]);
         $this->game->save();
-        
+        LocalController::Delete(Storage::path($this->zipUrl));
     }
 }

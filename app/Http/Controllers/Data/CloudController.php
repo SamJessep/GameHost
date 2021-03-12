@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Data;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\Data\CloudController;
 
 class CloudController extends Controller
 {

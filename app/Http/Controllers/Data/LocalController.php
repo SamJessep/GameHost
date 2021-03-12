@@ -30,12 +30,17 @@ class LocalController extends Controller
         return $savePath;
     }
 
-    public static function Delete($filePath){
-        $contents = Storage::get($filePath);
-        if($contents['type'] == 'dir'){
-            Storage::deleteDirectory($filePath);
+    public static function Delete($relativePath){
+        if(is_dir(Storage::path($relativePath))){
+            Storage::deleteDirectory($relativePath);
         }else{
-            Storage::delete($filePath);
+            Storage::delete($relativePath);
         }
+    }
+
+    public static function test(){
+        $fp = "tmpGames/BLUE2";
+        dd(dirname("tmpImages\CarRacer\8e48eTxG2P8Vd3Z5BHOPnE4xw1fx861OJvWgRRKw.png") == env('LOCAL_IMAGES_DIR'));
+        dd(CloudController::Path("CarRacer"));
     }
 }

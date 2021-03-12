@@ -7,6 +7,7 @@ use App\Http\Controllers\Game\GameController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Data\CloudController;
+use App\Http\Controllers\Data\LocalController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
 
@@ -75,4 +76,4 @@ Route::get('/game/{gameName}', [GameController::class, 'loadGame'])->name('load-
 
 
 
-//Route::get('/test', [CloudController::class, 'test']);
+Route::get('/test', [LocalController::class, 'test']);

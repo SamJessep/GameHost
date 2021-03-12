@@ -12,9 +12,15 @@ use App\Jobs\ProcessGameImageUpdate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use App\Jobs\NotifyUser\EmailUploadFailure;
+use App\Jobs\NotifyUser\EmailUploadSuccess;
 use App\Jobs\ProcessGameGallaryImageUpdate;
+use App\Http\Controllers\Game\GameController;
 use App\Http\Controllers\Data\CloudController;
 use App\Http\Controllers\Data\LocalController;
+use Illuminate\Bus\Batch;
+use Illuminate\Support\Facades\Bus;
+use Throwable;
 
 class GameController extends Controller
 {
@@ -44,13 +50,13 @@ class GameController extends Controller
         $zipUrl = LocalController::StoreFile($request->gameZip, 'tmpGames\\'.$request->name);
         //Upload Preview Image and gallary images
         if($request->previewImage){
-            $previewImageUrl = LocalController::StoreFile($request->previewImage, 'tmpImages\\'.$request->name);
+            $previewImageUrl = LocalController::StoreFile($request->previewImage, env('LOCAL_IMAGES_DIR'));
         }
 
         if($request->gallaryImages){
             $gallaryImagesUrls = [];
             foreach ($request->gallaryImages as $index=>$gallaryImage){
-                array_push($gallaryImagesUrls, LocalController::StoreFile($gallaryImage, 'tmpImages\\'.$request->name));
+                array_push($gallaryImagesUrls, LocalController::StoreFile($gallaryImage, env('LOCAL_IMAGES_DIR')));
             }
         }
         
@@ -62,9 +68,19 @@ class GameController extends Controller
             'gallaryImages' => implode('; ',$gallaryImagesUrls),
             'status' => 'ready for upload'
         ]);
-        ProcessGameUpload::dispatch($zipUrl, $game);
-        ProcessGameGallaryImageUpdate::dispatch($game, $gallaryImagesUrls);
-        ProcessGameImageUpdate::dispatch($game, $previewImageUrl);
+
+        //Start upload Batch job
+
+        $batch = Bus::batch([
+            new ProcessGameUpload($zipUrl, $game),
+            new ProcessGameGallaryImageUpdate($game, $gallaryImagesUrls),
+            new ProcessGameImageUpdate($game, $previewImageUrl)
+        ])->then(function (Batch $batch) use($game) {
+            EmailUploadSuccess::dispatch($game);
+        })->catch(function (Batch $batch, Throwable $e) use($game) {
+            EmailUploadFailure::dispatch($game, $e);
+            GameController::DeleteGame($game->name);
+        })->dispatch();
         return redirect()->route('submit-success');
     }
 
@@ -99,17 +115,18 @@ class GameController extends Controller
         if($request->gameZip){
             //Upload new zip, unzip, upload to cloud, store old folder to delete, replace db urls, delete old files
             $zipUrl = LocalController::StoreFile($request->gameZip, 'tmpGames\\'.$request->name);
+            ProcessGameUpload::dispatch($zipUrl, $game);
         }
 
         if($request->previewImage){
-            $imgUrl = LocalController::StoreFile($request->previewImage, 'tmpGames\\'.$request->name);
+            $imgUrl = LocalController::StoreFile($request->previewImage, env('LOCAL_IMAGES_DIR'));
             ProcessGameImageUpdate::dispatch($game, $imgUrl);
         }
 
         if($request->gallaryImages){
             $imgUrls = [];
             foreach($request->gallaryImages as $imgUrl){
-                array_push($imgUrls, LocalController::StoreFile($imgUrl, 'tmpGames\\'.$request->name));
+                array_push($imgUrls, LocalController::StoreFile($imgUrl, env('LOCAL_IMAGES_DIR')));
             }
             ProcessGameGallaryImageUpdate::dispatch($game, $imageUrls);
         }
