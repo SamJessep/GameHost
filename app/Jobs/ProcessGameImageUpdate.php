@@ -10,6 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Http\Controllers\Data\CloudController;
+use App\Http\Controllers\Data\LocalController;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 
 class ProcessGameImageUpdate implements ShouldQueue
@@ -36,19 +37,19 @@ class ProcessGameImageUpdate implements ShouldQueue
      */
     public function handle()
     {
+        //Upload images to cloud storage
         $newImgUrl = CloudController::UploadFile($this->localImageUrl, env('CLOUD_IMAGES_DIR'));
         $oldImgUrl = $this->game->thumbnailImage;
+        //Save Cloud image urls to database
         $this->game->fill([
             'thumbnailImage'=>$newImgUrl
         ]);
         $this->game->save();
-        if(dirname($oldImgUrl) == env('LOCAL_IMAGES_DIR')){
-            //Delete Local
-            LocalController::Delete($oldImgUrl);
-        }else{
-            //Delete Cloud
+        if(isset($oldImgUrl) && $oldImgUrl == $newImgUrl){
+            //Delete old Cloud image
             CloudController::Delete($oldImgUrl, false, true);
-
         }
+        //Delete Local
+        LocalController::Delete($this->localImageUrl);
     }
 }

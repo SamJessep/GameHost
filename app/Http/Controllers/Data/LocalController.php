@@ -39,8 +39,6 @@ class LocalController extends Controller
     }
 
     public static function test(){
-        $fp = "tmpGames/BLUE2";
-        dd(dirname("tmpImages\CarRacer\8e48eTxG2P8Vd3Z5BHOPnE4xw1fx861OJvWgRRKw.png") == env('LOCAL_IMAGES_DIR'));
-        dd(CloudController::Path("CarRacer"));
+        LocalController::Delete(Storage::path("tmpGames/CarRacerer2"));
     }
 }

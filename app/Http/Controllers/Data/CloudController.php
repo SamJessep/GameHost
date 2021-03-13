@@ -82,8 +82,8 @@ class CloudController extends Controller
         foreach($locations as $location){
             $contents = collect(Storage::cloud()->listContents($path, false));
             $cloudDir = $contents
-                        ->where('name', '=', $location)
-                        ->first();
+                ->where('name', '=', $location)
+                ->first();
             $path = $path.$cloudDir['path'];
         }
         return $path;

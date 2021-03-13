@@ -64,8 +64,6 @@ class GameController extends Controller
             'name' => $request->name,
             'author' => $user->username,
             'description' => $request->description,
-            'thumbnailImage' => $previewImageUrl,
-            'gallaryImages' => implode('; ',$gallaryImagesUrls),
             'status' => 'ready for upload'
         ]);
 
@@ -128,7 +126,7 @@ class GameController extends Controller
             foreach($request->gallaryImages as $imgUrl){
                 array_push($imgUrls, LocalController::StoreFile($imgUrl, env('LOCAL_IMAGES_DIR')));
             }
-            ProcessGameGallaryImageUpdate::dispatch($game, $imageUrls);
+            ProcessGameGallaryImageUpdate::dispatch($game, $imgUrls);
         }
 
         return view('web.game.edit-game', ["game"=>$game]);

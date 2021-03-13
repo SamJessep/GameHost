@@ -20,8 +20,8 @@ class CreateGamesTable extends Migration
             $table->string('author');
             $table->longText('description');
             $table->string('gameUrl')->nullable();
-            $table->string('thumbnailImage');
-            $table->longText('gallaryImages');
+            $table->string('thumbnailImage')->nullable();
+            $table->longText('gallaryImages')->nullable();
             $table->string('status');
 
             $table->foreign('author')->references('username')->on('users');
