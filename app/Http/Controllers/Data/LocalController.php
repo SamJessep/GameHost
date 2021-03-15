@@ -37,8 +37,4 @@ class LocalController extends Controller
             Storage::delete($relativePath);
         }
     }
-
-    public static function test(){
-        LocalController::Delete(Storage::path("tmpGames/CarRacerer2"));
-    }
 }

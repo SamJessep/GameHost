@@ -23,4 +23,12 @@
     @apply border-2 w-full rounded-lg p-2 mt-4 hover:bg-black hover:text-white cursor-pointer transition-all text-center;
   }
 
+  .player-btn{
+    @apply w-8 h-8  hover:text-white group-hover:text-white cursor-pointer;
+  }
+
+  .player-btn-disabled{
+    @apply w-8 h-8 text-gray-500 cursor-not-allowed;
+  }
+
 }
