@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers\Game;
 
+use Throwable;
 use ZipArchive;
 use App\Models\Games;
+use Illuminate\Bus\Batch;
 use App\Rules\validGameZip;
 use Illuminate\Http\Request;
 use App\Jobs\ProcessGameUpload;
+use Illuminate\Support\Facades\Bus;
 use App\Http\Controllers\Controller;
 use App\Jobs\ProcessGameImageUpdate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use App\Jobs\NotifyUser\EmailUploadFailure;
 use App\Jobs\NotifyUser\EmailUploadSuccess;
@@ -18,9 +22,6 @@ use App\Jobs\ProcessGameGallaryImageUpdate;
 use App\Http\Controllers\Game\GameController;
 use App\Http\Controllers\Data\CloudController;
 use App\Http\Controllers\Data\LocalController;
-use Illuminate\Bus\Batch;
-use Illuminate\Support\Facades\Bus;
-use Throwable;
 
 class GameController extends Controller
 {
@@ -129,12 +130,32 @@ class GameController extends Controller
             ProcessGameGallaryImageUpdate::dispatch($game, $imgUrls);
         }
 
-        return view('web.game.edit-game', ["game"=>$game]);
+        return view('web.game.my-games');
     }
 
     public function DeleteGame($gameName){
         Games::where('name', $gameName)->first()->delete();
         return redirect()->route('my-games');
+    }
+
+    public function ForwardStorageRequest(Request $request, $target){
+        // $cloudPath = base64_decode($base64Path);
+        // $cloudPath = $target;
+        // $client = new Client();
+        $request = Http::get(env('GAME_STORE_URL').$target);
+        // dd($request);
+        return response($request->body())
+            ->header('Content-Type', $request->header('Content-Type'));
+        // dd($request->body());
+        // return Http::withBody(
+        //     $request->body(),'text/css'
+        // );
+        // return $request->body()->header('Content-Type', 'style/css');
+
+        // $response = $client->request("GET",env('GAME_STORE_URL').$cloudPath);
+        // return $response;
+        // dd($response->getBody());
+        // return $response->getBody();
     }
 
 

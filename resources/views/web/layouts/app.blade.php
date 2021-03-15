@@ -4,7 +4,7 @@
   @include('web.components.head')
   <title>@yield('title', 'Game Host')</title>
 </head>
-<body class="bg-gray-300 flex flex-col h-screen justify-between">
+<body class="bg-gray-300 h-screen">
   @include('web.components.header')
   <main>
     @yield('content')

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -13,11 +15,14 @@ class LoginController extends Controller
 
     public function store(Request $request){
         $this->validate($request, [
-            'username' => 'required|max:255',
+            'userId' => 'required|max:100',
             'password' => 'required'
         ]);
 
-        if(!auth()->attempt($request->only('username', 'password'), $request->rememberMe)){
+        $usernameFoundUser = User::where('username', $request->userId)->first();
+        $email = $usernameFoundUser ? $usernameFoundUser->email : $request->userId;
+
+        if(!Auth::attempt(['email' => $email, 'password' => $request->password], $request->remember)){
             return back()->with('status', 'invalid login details');
         }
 

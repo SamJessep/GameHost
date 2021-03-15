@@ -70,8 +70,8 @@ Route::post('/game/{gameName}/delete', [GameController::class, 'deleteGame'])->m
 Route::get('/upload-game/submit-success', [GameController::class, 'submitSuccess'])->middleware('auth')->name('submit-success');
 
 //Game player
-Route::get('/game/{gameName}', [GameController::class, 'loadGame'])->name('load-game');
-
+Route::get('/game/{gameName}', [GameController::class, 'loadGame'])->middleware('googledrive')->name('load-game');
+Route::get('/cloud/{target}', [GameController::class, 'ForwardStorageRequest'])->where('target', '.*')->name('cloud');
 
 
 

@@ -22,4 +22,5 @@
   .btn-neutral{
     @apply border-2 w-full rounded-lg p-2 mt-4 hover:bg-black hover:text-white cursor-pointer transition-all text-center;
   }
+
 }
