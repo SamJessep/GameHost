@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Data\CloudController;
 use App\Http\Controllers\Data\LocalController;
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\Game\CommentController;
 use App\Http\Controllers\Auth\RegisterController;
 
 /*
@@ -72,3 +73,8 @@ Route::get('/upload-game/submit-success', [GameController::class, 'submitSuccess
 //Game player
 Route::get('/game/{gameName}', [GameController::class, 'loadGame'])->middleware('googledrive')->name('load-game');
 Route::get('/cloud/{target}', [GameController::class, 'ForwardStorageRequest'])->where('target', '.*')->name('cloud');
+
+//Post Comment
+Route::post('/game/{gameName}/comment', [CommentController::class, 'postComment'])->middleware('auth')->name('post-comment');
+//Post Reply
+Route::post('/game/{gameName}/comment/{commentId}/reply', [CommentController::class, 'postReply'])->middleware('auth')->name('post-reply');

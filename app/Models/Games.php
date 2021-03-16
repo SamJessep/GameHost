@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Comment;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Games extends Model
 {
@@ -21,5 +22,9 @@ class Games extends Model
 
     public function authorUser(){
         return User::where('username', $this->author)->first();
+    }
+
+    public function GetComments(){
+        return Comment::where('gameId', $this->name)->where('destinationId', null)->get();
     }
 }

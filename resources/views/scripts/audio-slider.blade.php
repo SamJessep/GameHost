@@ -27,13 +27,17 @@ const muteGame = (on)=>{
   mute.classList[on?'remove':'add']('inline')
   mute.classList[on?'add':'remove']('hidden')
 }
+
+var audioCheckCount = 0;
 var audioChecker = setInterval(function(){
+  audioCheckCount++
   console.log("Checking for audio support")
   var controlsEnabled = SupportsAudioControls()
   slider.disabled=!controlsEnabled
   if(!controlsEnabled){
     mute.classList=["player-btn-disabled"]
     unmute.classList=["hidden"]
+    if(audioCheckCount>5) clearInterval(audioChecker)
   }else{
     clearInterval(audioChecker)
     slider.oninput = e=>{

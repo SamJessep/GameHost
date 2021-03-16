@@ -38,7 +38,7 @@ class GameController extends Controller
         $user = Auth::user();
         $this->validate($request, [
             'name' => 'required|max:255|unique:App\Models\Games,name',
-            'description' => 'max:1000',
+            'description' => 'max:10000',
             'gameZip' => 'file|max:50000',
             'previewImage' => 'required|image|max:5000',
             'gallaryImages' => 'max:50000'
@@ -99,7 +99,7 @@ class GameController extends Controller
         
         $this->validate($request, [
             'name' => 'required|max:255',
-            'description' => 'max:1000',
+            'description' => 'max:10000',
             'gameZip' => 'file|max:50000',
             'previewImage' => 'image|max:5000',
             'gallaryImages' => 'max:50000'
@@ -130,7 +130,7 @@ class GameController extends Controller
             ProcessGameGallaryImageUpdate::dispatch($game, $imgUrls);
         }
 
-        return view('web.game.my-games');
+        return redirect()->route('my-games');
     }
 
     public function DeleteGame($gameName){
@@ -139,23 +139,9 @@ class GameController extends Controller
     }
 
     public function ForwardStorageRequest(Request $request, $target){
-        // $cloudPath = base64_decode($base64Path);
-        // $cloudPath = $target;
-        // $client = new Client();
         $request = Http::get(env('GAME_STORE_URL').$target);
-        // dd($request);
         return response($request->body())
             ->header('Content-Type', $request->header('Content-Type'));
-        // dd($request->body());
-        // return Http::withBody(
-        //     $request->body(),'text/css'
-        // );
-        // return $request->body()->header('Content-Type', 'style/css');
-
-        // $response = $client->request("GET",env('GAME_STORE_URL').$cloudPath);
-        // return $response;
-        // dd($response->getBody());
-        // return $response->getBody();
     }
 
 

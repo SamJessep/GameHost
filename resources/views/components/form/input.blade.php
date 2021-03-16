@@ -1,4 +1,4 @@
-<label>{{$label}}
+<label class="{{$labelClasses??""}}">{{$label}}
   {{ $slot }}
   <input 
   name="{{$name}}"
@@ -9,6 +9,7 @@
   @endif 
   >
 </label>
+{{$beforeWarning}}
 @error($name)
 <div class="text-red-500">{{$message}}</div>
 @enderror
