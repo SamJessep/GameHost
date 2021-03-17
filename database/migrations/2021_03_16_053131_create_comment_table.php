@@ -18,8 +18,6 @@ class CreateCommentTable extends Migration
             $table->timestamps();
             $table->string('message');
             $table->string('author');
-            $table->integer('likes')->default(0);
-            $table->integer('dislikes')->default(0);
             $table->string('destinationId')->nullable();
 
             $table->foreign('author')->references('username')->on('users');

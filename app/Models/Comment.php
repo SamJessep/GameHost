@@ -14,10 +14,24 @@ class Comment extends Model
         'gameId',
         'author',
         'message',
-        'destinationId',
-        'likes',
-        'dislikes'
+        'destinationId'
     ];
+
+    public function GetLikes(){
+        return count($this->GetLikers());
+    }
+
+    public function GetLikers(){
+        return CommentRating::where('commentId', $this->id)->where('rating', 'like')->get();
+    }
+
+    public function GetDislikes(){
+        return count($this->GetDislikers());
+    }
+
+    public function GetDislikers(){
+        return CommentRating::where('commentId', $this->id)->where('rating', 'dislike')->get();
+    }
 
     public function GetUser(){
         return User::where('username', $this->author)->first();
