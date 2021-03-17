@@ -13,12 +13,9 @@
       id="game-window"
       src="{{route('cloud',['target'=>$game->gameUrl])}}/index.html" 
       class="h-full w-full"
-      onload="(e)=>window.gameFrameLoaded=true"
       >
       </iframe>
-      <div id="iframeLoader" class="relative -top-full h-full w-full duration-1000 bg-green-500 transition-opacity">
-        <x-game.loading-game></x-game.loading-game>
-      </div>
+      <x-game.loading-game/>
     </div>
     <div id="controlBar" class="flex bg-gray-600 rounded mb-5">
       <x-game.audioSlider class="flex-grow"></x-game.audioSlider>
@@ -31,7 +28,8 @@
   <div class="flex sm:flex-row flex-col">
     <div class="sm:w-7/12 mx-6">
       <x-game.description :text="$game->description" textClasses="text-white text-xl" btnClasses="link text-2xl" class="transition-all" />
-      <x-game.comments-section :game="$game" />
+      @livewire("comments-section",["game"=>$game])
+        {{-- <x-game.comments-section :game="$game" /> --}}
     </div>
     <div class="sm:w-5/12 mx-6">
       @include('web.game.player.gallary-preview')
@@ -52,4 +50,5 @@
   @include('scripts.game-loader')
   @include('scripts.show-more')
   @include('scripts.comments')
+  @livewireScripts
 @endsection
