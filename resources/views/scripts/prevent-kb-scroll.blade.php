@@ -1,17 +1,9 @@
 <script>
-gameWindow.contentWindow.focus()
-var baseDocument = document;
-gameWindow.contentWindow.onfocus = ()=>{
-  alert('focused')
-  baseDocument.onkeydown = e=>{
-    console.log(e)
-    if(gameWindow)
-    e.preventDefault()
-  }
-}
-gameWindow.contentWindow.onblur = ()=>{
-  alert("blured")
-  baseDocument.onkeydown=null
-}
+gameWindow.onfocus=e=>console.log(document.activeElement)
 
+// document.onkeydown=gameWindow.contentDocument=e=>{
+//   if(!['input'].includes(document.activeElement.tagName.toLowerCase())){
+//     e.preventDefault()
+//   }
+// }
 </script>
