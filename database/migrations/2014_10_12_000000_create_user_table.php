@@ -21,6 +21,7 @@ class CreateUserTable extends Migration
                 $table->string('password');
                 $table->string('picture');
                 $table->boolean('isDev');
+                $table->dateTime('email_verified_at')->nullable();
                 $table->rememberToken();
                 $table->timestamps();
     

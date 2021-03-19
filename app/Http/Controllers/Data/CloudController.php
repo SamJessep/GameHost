@@ -63,8 +63,16 @@ class CloudController extends Controller
         return $cloudPath.'/'.basename($localPath);
     }
 
-    public static function ShareFile(){
-
+    public static function FileExists($cloudPath, $needsDecoding=true){
+        try{
+            if($needsDecoding){
+                $cloudPath=CloudController::Path($cloudPath);
+            }
+        }
+        catch(\Exception $e){
+            return false;
+        }
+        return !Storage::cloud()->missing($cloudPath);
     }
 
     public static function Delete($cloudPath, $isDir=false, $decoded=false){

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Auth\Events\PasswordReset;
+use App\Http\Controllers\Data\CloudController;
 
 class UserController extends Controller
 {
@@ -44,40 +45,24 @@ class UserController extends Controller
             'about'=>$request->about ?? '',
             'isDev'=>$request->isDev ? true : false
         ]);
-        $this->storePicture($request);
         $user->save();
         return redirect()->route('user', ['username'=>$user->username]);
     }
 
-    public function storePicture(Request $request){
-        $user = Auth::user();
+    public static function storePicture($picture, $localPath, $user){
         $current_time = \Carbon\Carbon::now()->timestamp;
-        if ($request->hasFile('image')) {
-            //  Let's do everything here
-            if ($request->file('image')->isValid()) {
-                //
-                $validated = $request->validate([
-                    'image' => 'mimes:jpeg,png|max:625000',
-                ]);
-                $extension = $request->image->extension();
-                $request->image->storeAs('public/', $user->id."-".$current_time.".".$extension);
-                $url = Storage::url('public/'.$user->id."-".$current_time.".".$extension);
-                //Delete old profile picture
-                if(File::exists($user->picture)) {
-                    File::delete($user->picture);
-                }
-                $user->picture = $url;
-            }
+        $extension = $picture->extension();
+        $url = CloudController::UploadFile(
+            $localPath,
+            env('CLOUD_IMAGES_DIR')
+        );
+        //Delete old profile picture
+        if(CloudController::FileExists($user->picture)) {
+            CloudController::Delete($user->picture);
         }
-        return $request;
-        //abort(500, 'Could not upload image :(');
-    }
-
-    public function RemoveProfile(){
-        $user = Auth::user();
-        $user->picture = 'images/noProfile.png';
+        $user->picture=$url;
         $user->save();
-        return redirect()->route('edit-user', ['username'=>$user->username]);
+        return $user;
     }
 
     public function storeResetEmail(Request $request) {
@@ -127,8 +112,6 @@ class UserController extends Controller
     public function myGames(){
         $user = Auth::user();
         $myGames = Games::where('author', $user->username)->get();
-
-        //dd($myGames);
         return view('web.game.my-games', ['myGames'=>$myGames]);
     }
 }

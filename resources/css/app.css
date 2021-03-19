@@ -31,4 +31,31 @@
     @apply w-8 h-8 text-gray-500 cursor-not-allowed;
   }
 
+  .dropdown-content{
+    left: 0;
+    padding-top: 4px;
+    position: absolute;
+    top: 100%;
+    z-index: 9999;
+  }
+
+  .dropdown{
+    position: relative;
+  }
+  
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+
+  .dropdown-content{
+    display:none;
+  }
+
+  .absolute-center{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
 }

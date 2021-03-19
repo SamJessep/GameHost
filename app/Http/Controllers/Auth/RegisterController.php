@@ -22,7 +22,7 @@ class RegisterController extends Controller
             'password' => 'required|confirmed'
         ]);
 
-        User::create([
+        $user = User::create([
             'name'=>$request->name,
             'username'=>$request->username,
             'email'=>$request->email,
@@ -33,7 +33,8 @@ class RegisterController extends Controller
         if(!auth()->attempt($request->only('username', 'password'))){
             return back()->with('status', 'invalid login details');
         }
+        $user->sendEmailVerificationNotification();
 
-        return redirect()->route('home');
+        return redirect()->route('verification.notice');
     }
 }
