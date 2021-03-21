@@ -11,9 +11,10 @@
           </div>
       </div>
       <small class="text-gray-600 float-right">{{$comment->GetFormatedPostDate()}}</small>
-      <div class="flex mt-3">
-        <livewire:like-button :comment="$comment"/>
-        <livewire:dislike-button :comment="$comment"/>
+      <div>
+        @auth
+        <livewire:react-buttons :comment="$comment"/>
+        @endauth
       </div>
       <form wire:submit.prevent="postReply">
         @csrf

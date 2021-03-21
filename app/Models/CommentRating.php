@@ -15,4 +15,8 @@ class CommentRating extends Model
         'userId',
         'rating'
     ];
+
+    public function GetUser(){
+        return User::where('username',$this->userId)->first(); 
+    }
 }
