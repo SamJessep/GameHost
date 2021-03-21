@@ -29,7 +29,6 @@
     <div class="sm:w-7/12 mx-6">
       <x-game.description :text="$game->description" textClasses="text-white text-xl" btnClasses="link text-2xl" class="transition-all" />
       @livewire("comments-section",["game"=>$game])
-        {{-- <x-game.comments-section :game="$game" /> --}}
     </div>
     <div class="sm:w-5/12 mx-6">
       @include('web.game.player.gallary-preview')
