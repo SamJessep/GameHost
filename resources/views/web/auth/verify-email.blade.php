@@ -19,7 +19,7 @@
     <x-form.input label="New email" name="email" type="email" placeholder="newemail@example.com"/>
     <button class="btn-good" type="submit">Update</button>
 </form>
-<a class="btn-good block text-center" href="{{route('home')}}">
+<a class="btn-good block text-center" href="{{$intendedUrl}}">
     Already verified ?
 </a>
 @endsection

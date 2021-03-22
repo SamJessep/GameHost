@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 class RegisterController extends Controller
 {
     public function index(){
+        session(['url.intended' => url()->previous()]);
         return view('web.auth.register');
     }
 

@@ -8,6 +8,7 @@ use App\Models\Games;
 use Illuminate\Bus\Batch;
 use App\Rules\validGameZip;
 use Illuminate\Http\Request;
+use App\Exceptions\NoGameFound;
 use App\Jobs\ProcessGameUpload;
 use Illuminate\Support\Facades\Bus;
 use App\Http\Controllers\Controller;
@@ -22,13 +23,20 @@ use App\Jobs\ProcessGameGallaryImageUpdate;
 use App\Http\Controllers\Game\GameController;
 use App\Http\Controllers\Data\CloudController;
 use App\Http\Controllers\Data\LocalController;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class GameController extends Controller
 {
     public function loadGame($gameName){
-        $game = Games::where('name', $gameName)->first();
-        return view('web.game.player',['game'=>$game]);
+        try{
+            $game = Games::where('name', $gameName)->first();
+            if(!$game) throw new NoGameFound($gameName);
+            return view('web.game.player',['game'=>$game]);
+        }catch(NoGameFound $e){
+            return $e->render();
+        }
     }
+
 
     public function uploadGameForm(){
         return view('web.game.upload-game');

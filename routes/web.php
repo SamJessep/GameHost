@@ -27,13 +27,13 @@ use App\Http\Controllers\Auth\RegisterController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 //Auth
-Route::get('/Register', [RegisterController::class, 'index'])->name('register');
-Route::post('/Register', [RegisterController::class, 'store']);
+Route::get('/register', [RegisterController::class, 'index'])->name('register');
+Route::post('/register', [RegisterController::class, 'store']);
 
-Route::get('/Login', [LoginController::class, 'index'])->name('login');
-Route::post('/Login', [LoginController::class, 'store']);
+Route::get('/login', [LoginController::class, 'index'])->name('login');
+Route::post('/login', [LoginController::class, 'store']);
 
-Route::post('/Logout', [LogoutController::class, 'store'])->name('logout');
+Route::post('/logout', [LogoutController::class, 'store'])->name('logout');
 
 //Verify Email
 Route::get('/email/verify', [EmailController::class, 'VerifyEmailNotice'])->middleware('auth')->name('verification.notice');
@@ -41,11 +41,11 @@ Route::get('/email/verify/{id}/{hash}', [EmailController::class, 'VeficationHand
 Route::post('/email/verification-notification', [EmailController::class, 'ResentVerificationEmail'])->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 Route::post('/email/reset', [EmailController::class, 'UpdateEmail'])->name('update-email');
 
-Route::get('/User/{username}', [UserController::class, 'index'])->middleware(['auth'])->name('user');
-Route::get('/User/{username}/Edit', [UserController::class, 'edit'])->middleware(['auth'])->name('edit-user');
-Route::post('/User/{username}/UploadPicture', [UserController::class, 'storePicture'])->middleware(['auth'])->name('upload-picture');
-Route::post('/User/{username}/RemovePicture', [UserController::class, 'RemoveProfile'])->middleware(['auth'])->name('remove-picture');
-Route::post('/User/{username}/Save', [UserController::class, 'saveEdits'])->middleware(['auth'])->name('save-edits');
+Route::get('/user/{username}', [UserController::class, 'index'])->name('user');
+Route::get('/user/{username}/Edit', [UserController::class, 'edit'])->middleware(['auth'])->name('edit-user');
+Route::post('/user/{username}/UploadPicture', [UserController::class, 'storePicture'])->middleware(['auth'])->name('upload-picture');
+Route::post('/user/{username}/RemovePicture', [UserController::class, 'RemoveProfile'])->middleware(['auth'])->name('remove-picture');
+Route::post('/user/{username}/Save', [UserController::class, 'saveEdits'])->middleware(['auth'])->name('save-edits');
 
 //Reset password
 Route::get('/forgot-password', [UserController::class, 'forgotPassword'])

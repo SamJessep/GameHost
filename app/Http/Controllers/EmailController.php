@@ -10,7 +10,7 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 class EmailController extends Controller
 {
     public function VerifyEmailNotice(){
-        return view('web.auth.verify-email',['email'=>Auth::user()->email]);
+        return view('web.auth.verify-email',['email'=>Auth::user()->email,'intendedUrl'=>session('url.intended')]);
     }
 
     public function VeficationHandler(EmailVerificationRequest $request) {

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 class LoginController extends Controller
 {
     public function index(){
+        session(['url.intended' => url()->previous()]);
         return view('web.auth.login');
     }
 
@@ -25,7 +26,6 @@ class LoginController extends Controller
         if(!Auth::attempt(['email' => $email, 'password' => $request->password], $request->remember)){
             return back()->with('status', 'invalid login details');
         }
-
-        return redirect()->route('home');
+        return redirect(session('url.intended'));
     }
 }

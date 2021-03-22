@@ -5,6 +5,7 @@ use App\Models\User;
 use App\Models\Games;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Exceptions\UserNotFound;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -21,10 +22,15 @@ class UserController extends Controller
 {
     public function index($username){
         $user = DB::select('select * from users where username = ?',[$username]);
-        if($user){
-            return view('web.user.user', ['user'=>$user[0]]);
+        try{
+            if($user){
+                return view('web.user.user', ['user'=>$user[0]]);
+            }
+            throw new UserNotFound($username);
         }
-        return view('web.errors.404');
+        catch(UserNotFound $e){
+            return $e->render();
+        }
     }
 
     public function edit($username){
