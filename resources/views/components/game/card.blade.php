@@ -9,11 +9,13 @@
 
         <div class="flex justify-between">
             <x-game.author class="author" :author="$author"/>
-            @if($game->author == $user->username)
-                <a class="text-green-600 hover:text-green-800 mr-3 m-auto" href="{{route('edit-game', ["gameName"=>$game->name])}}">
-                    <x-icons.edit class="w-5 h-5 inline"/> Edit Game
-                </a>
-            @endif
+            @auth
+                @if($game->author == $user->username)
+                    <a class="text-green-600 hover:text-green-800 mr-3 m-auto" href="{{route('edit-game', ["gameName"=>$game->name])}}">
+                        <x-icons.edit class="w-5 h-5 inline"/> Edit Game
+                    </a>
+                @endif
+            @endauth
         </div>
     </div>
 </x-underline-card>
