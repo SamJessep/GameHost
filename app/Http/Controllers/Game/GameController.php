@@ -47,7 +47,7 @@ class GameController extends Controller
         $this->validate($request, [
             'name' => 'required|max:255|unique:App\Models\Games,name',
             'description' => 'max:10000',
-            'gameZip' => 'file|max:50000',
+            'gameZip' => 'file|max:150000',
             'previewImage' => 'required|image|max:5000',
             'gallaryImages' => 'max:50000'
         ]);
@@ -108,7 +108,7 @@ class GameController extends Controller
         $this->validate($request, [
             'name' => 'required|max:255',
             'description' => 'max:10000',
-            'gameZip' => 'file|max:50000',
+            'gameZip' => 'file|max:150000',
             'previewImage' => 'image|max:5000',
             'gallaryImages' => 'max:50000'
         ]);
@@ -147,7 +147,11 @@ class GameController extends Controller
     }
 
     public function ForwardStorageRequest(Request $request, $target){
-        $request = Http::get(env('GAME_STORE_URL').$target);
+        $request = Http::withHeaders([
+            'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36',
+            'accept'=> 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+            'accept-encoding'=>'gzip, deflate, br'
+        ])->get(env('GAME_STORE_URL').$target);
         return response($request->body())
             ->header('Content-Type', $request->header('Content-Type'));
     }
